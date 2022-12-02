@@ -1,0 +1,19 @@
+{
+  "name": "prisma-postgre",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Morasumu <alerk_star@outlook.com> (https://github.com/morasumu)",
+  "license": "ISC",
+  "devDependencies": {
+  },
+  "dependencies": {
+    "prisma": "^4.7.0",
+    "typescript": "^4.9.3",
+    "@types/node": "^18.11.10",
+    "ts-node": "^10.9.1"
+  }
+}
