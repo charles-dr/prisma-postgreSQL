@@ -2,7 +2,6 @@ import type { Express } from "express";
 import passport from "passport";
 import passportLocal from "passport-local";
 import passportJWT from "passport-jwt";
-import { Request, Response, NextFunction } from "express";
 import prisma from "./prisma";
 import { appConfig } from "./app";
 import { comparePassword } from "../utils/password";
@@ -46,7 +45,6 @@ export const configure = (app: Express) => {
         secretOrKey: appConfig.JWT_SECRET,
       },
       (jwtPayload, cb) => {
-        console.log("jwtstrategy.callback", jwtPayload);
         return prisma.user
           .findUnique({ where: { id: jwtPayload.id } })
           .then((user) => {

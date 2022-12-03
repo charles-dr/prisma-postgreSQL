@@ -2,11 +2,8 @@ import express from "express";
 import path from "path";
 import bodyParser from "body-parser";
 import cors from "cors";
-import flash from "express-flash";
 import * as dotenv from "dotenv";
 import session from "express-session";
-// import passport from "passport";
-// import { ExtractJwt, Strategy as JWTStrategy } from "passport-jwt";
 import * as passportConfig from "./config/passport";
 import * as routers from "./routes";
 
@@ -27,20 +24,12 @@ app.use(
 );
 
 passportConfig.configure(app);
-// app.use(passport.initialize());
-// app.use(passport.session());
-// app.use(flash());
 
-app.use("/test", (req, res, next) => {
-  console.log("Request URL:", req.originalUrl, req.path);
-  next();
-});
 app.use("/users", routers.user);
 app.use("/posts", routers.post);
 app.use("/auth", routers.auth);
 
 app.use((req, res, next) => {
-  console.log("app.middleware.after");
   return res.status(404).send("Not found or invalid params");
 });
 
