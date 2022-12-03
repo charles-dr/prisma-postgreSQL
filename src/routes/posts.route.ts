@@ -1,11 +1,22 @@
 import { Router } from "express";
+import passport from "passport";
 import prisma from "../config/prisma";
-import * as passport from "../config/passport";
+// import * as passport from "../config/passport";
 
 const router = Router();
 
-router.route("/").post(passport.isAuthenticated, async (req, res) => {
-  return res.status(200).send("you called [POST]posts/.");
+router.use((req, res, next) => {
+  console.log("passport.middleware.before");
+  next();
+});
+
+router.use(passport.authenticate("jwt", { session: false }));
+
+router.post("/s", (req, res) => {
+  console.log("did you call me?");
+  return res
+    .status(200)
+    .json({ status: true, message: "you called [POST]posts/." });
 });
 
 export default router;
