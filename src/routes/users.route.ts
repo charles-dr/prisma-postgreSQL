@@ -1,39 +1,31 @@
 import { Router } from "express";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../config/prisma";
 
-const prisma = new PrismaClient();
 const router = Router();
 
-router
-  .route("/")
-  .post(async (req, res) => {
-    const { email, name } = req.body;
+router.use((req, res, next) => {
+  console.log("middleware.router");
+  next();
+});
 
-    if (!email) {
-      return res.status(400).json({
-        status: false,
-        message: "email is required",
-      });
-    }
+router.use("/", (req, res, next) => {
+  console.log("middleware.route: /");
+  next();
+});
 
-    const userWithEmail = await prisma.user.findUnique({ where: { email } });
-    if (userWithEmail) {
-      return res.status(400).json({
-        status: false,
-        message: "User already exists with email",
-      });
-    }
-
-    const created = await prisma.user.create({
-      data: { email, name },
-    });
-
-    return res.status(200).json(created);
-  })
-  .get(async (req, res) => {
+router.route("/").get(
+  (req, res, next) => {
+    console.log("[/users] middleware", req.path);
+    // next("router");
+    next();
+  },
+  async (req, res) => {
+    console.log("route : /");
+    console.log("[/users] handler", req.path);
     const users = await prisma.user.findMany();
     res.status(200).json(users);
-  });
+  }
+);
 
 router
   .route("/:id")
@@ -60,5 +52,10 @@ router
 
     return res.status(200).json(updatedUser);
   });
+
+// router.use((req, res, next) => {
+//   console.log("router.middleware.after");
+//   next();
+// });
 
 export default router;
