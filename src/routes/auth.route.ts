@@ -8,6 +8,8 @@ import { encryptPassword } from "../utils/password";
 
 const router = Router();
 
+router.post("/auth0-hook", (req, res) => {});
+
 router.post("/register", async (req, res) => {
   const { email, name, password } = req.body;
 

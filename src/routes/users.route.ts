@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { requiresAuth } from "express-openid-connect";
 import prisma from "../config/prisma";
 
 const router = Router();
@@ -6,6 +7,10 @@ const router = Router();
 router.route("/").get(async (req, res) => {
   const users = await prisma.user.findMany();
   res.status(200).json(users);
+});
+
+router.get("/me", requiresAuth(), (req, res) => {
+  res.json(req.oidc.user);
 });
 
 router

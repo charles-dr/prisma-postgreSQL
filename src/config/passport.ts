@@ -2,6 +2,7 @@ import type { Express } from "express";
 import passport from "passport";
 import passportLocal from "passport-local";
 import passportJWT from "passport-jwt";
+import Auth0Strategy from "passport-auth0";
 import prisma from "./prisma";
 import { appConfig } from "./app";
 import { comparePassword } from "../utils/password";
@@ -9,6 +10,22 @@ import { comparePassword } from "../utils/password";
 const LocalStrategy = passportLocal.Strategy;
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
+
+var auth0Strategy = new Auth0Strategy(
+  {
+    domain: `${process.env.AUTH0_ISSUER_URL}`,
+    clientID: `${process.env.AUTH0_CLIENT_ID}`,
+    clientSecret: `${process.env.AUTH0_SECRET}`,
+    callbackURL: `${process.env.AUTH0_BASE_URL}`,
+    passReqToCallback: true,
+  },
+  function (req, accessToken, refreshToken, extraParams, profile, done) {
+    //
+    // State value is in req.query.state ...
+    //
+    return done(null, profile);
+  }
+);
 
 export const configure = (app: Express) => {
   app.use(passport.initialize());
@@ -57,4 +74,6 @@ export const configure = (app: Express) => {
       }
     )
   );
+
+  passport.use(auth0Strategy);
 };

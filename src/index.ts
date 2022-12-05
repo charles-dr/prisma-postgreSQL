@@ -5,6 +5,7 @@ import cors from "cors";
 import * as dotenv from "dotenv";
 import session from "express-session";
 import * as passportConfig from "./config/passport";
+import * as auth0Config from "./config/auth0";
 import * as routers from "./routes";
 
 dotenv.config();
@@ -24,7 +25,15 @@ app.use(
 );
 
 passportConfig.configure(app);
+auth0Config.configure(app);
 
+app.get("/", (req, res) => {
+  res.send(
+    req.oidc.isAuthenticated()
+      ? "Prisma-PostgreSQL-Passsport"
+      : "Unauthenticated!"
+  );
+});
 app.use("/users", routers.user);
 app.use("/posts", routers.post);
 app.use("/auth", routers.auth);
